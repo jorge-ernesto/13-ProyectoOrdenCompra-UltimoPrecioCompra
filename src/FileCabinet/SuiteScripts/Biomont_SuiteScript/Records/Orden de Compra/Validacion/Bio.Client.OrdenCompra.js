@@ -4,6 +4,11 @@
 // - Registro:
 //      - Orden de Compra (purchaseorder)
 
+// Validación como la usa LatamReady:
+// - ClientScript           : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
+// - En modo crear o editar : Validamos por el formulario.
+// - En modo ver            : Validamos por el pais de la subsidiaria.
+
 /**
  * @NApiVersion 2.1
  * @NScriptType ClientScript
@@ -14,6 +19,16 @@ define(['./lib/Bio.Library.Search', 'N'],
     function (objSearch, N) {
 
         const { log } = N;
+
+        /**
+         * Formularios
+         *
+         * 183: BIO_FRM_ORDEN_COMPRA
+         * 249: BIO_FRM_ORDEN_COMPRA_CONTROL
+         * 197: BIO_FRM_ORDEN_COMPRA_IMPORTACION
+         * 225: BIO_FRM_ORDEN_COMPRA_SERVICIOS
+         */
+        const formularios = [183, 249, 197, 225];
 
         /******************/
 
@@ -45,72 +60,104 @@ define(['./lib/Bio.Library.Search', 'N'],
          */
         function fieldChanged(scriptContext) {
 
-            // Siempre se ejecuta, ya sea a nivel de cabecera o a nivel de linea (sublista)
-            // console.log('fieldChanged', scriptContext);
+            // Obtener el currentRecord y mode
+            let recordContext = scriptContext.currentRecord;
+            let mode = recordContext.getValue('id') ? 'edit' : 'create';
 
-            // Esta función setValueSubList se encarga de manejar valores por defecto en la sublista
-            setValueSubList(scriptContext);
+            // Obtener datos
+            let formulario = recordContext.getValue('customform') || null;
+
+            // Modo crear, editar, copiar y formularios
+            if ((mode == 'create' || mode == 'edit' || mode == 'copy') && formularios.includes(Number(formulario))) {
+
+                setValueSubList(scriptContext, recordContext, mode);
+            }
         }
 
-        function setValueSubList(scriptContext) {
+        function setValueSubList(scriptContext, recordContext, mode) {
 
-            // Esto se ejecuta cuando se hacen cambios en el campo "item" de la sublista "item"
-            if (scriptContext.fieldId == 'item') {
+            // DEBUG
+            // SI EL EVENTO OCURRE A NIVEL DE CAMPOS DE CABECERA
+            if (isEmpty(scriptContext.sublistId)) {
+                console.log('fieldChanged!!!', scriptContext);
+            }
 
-                // console.log('fieldChanged', scriptContext);
-                // console.log('sublistId', scriptContext.sublistId);
-                // console.log('line', scriptContext.line);
+            // SI EL EVENTO OCURRE A NIVEL DE SUBLISTA
+            if (!isEmpty(scriptContext.sublistId)) {
+                console.log('fieldChanged!!!', scriptContext)
+            }
 
-                // Obtener el currentRecord
-                let recordContext = scriptContext.currentRecord;
+            /******************/
+
+            // SE EJECUTA SOLO CUANDO SE HACEN CAMBIOS EN LA SUBLISTA ITEM Y CAMPO ARTICULO
+            if (scriptContext.sublistId == 'item' && scriptContext.fieldId == 'item') {
+
+                // Obtener data de la sublista
+                let line = scriptContext.line;
 
                 // Obtener datos
                 let ordenCompraId = recordContext.getValue('id');
                 let exchangerate = recordContext.getValue('exchangerate'); // Si la moneda es soles, el TC por defecto es 1
 
                 // Debug
-                let data = {
-                    'ordenCompraId': ordenCompraId,
-                    'exchangerate': exchangerate,
-                };
-                console.log('data', data);
+                // console.log('data', { ordenCompraId, exchangerate });
 
-                // Validar que sea la sublista "item"
-                if (scriptContext.sublistId == 'item') {
+                // Obtener campos
+                let columnItem = recordContext.getCurrentSublistValue({
+                    sublistId: 'item',
+                    fieldId: 'item',
+                    line: line
+                });
 
-                    // Obtener el indice de la linea modificada
-                    let line = scriptContext.line;
+                // Validar data
+                if (columnItem) {
 
-                    // Obtener item
-                    let itemId = recordContext.getCurrentSublistValue({
-                        sublistId: 'item',
-                        fieldId: 'item',
-                        line: line
-                    });
+                    // Obtener ultimo precio de compra, desde la ultima Orden de Compra registrada con el Articulo
+                    let ultimoPrecioCompraSoles = objSearch.getUltimoPrecioCompraSoles_byOCAndArticle(ordenCompraId, columnItem);
 
-                    // Validar item
-                    if (itemId) {
+                    // Debug
+                    // console.log('ultimoPrecioCompraSoles', ultimoPrecioCompraSoles);
 
-                        // Obtener ultimo precio de compra, desde la ultima Orden de Compra registrada con el Articulo
-                        let ultimoPrecioCompraSoles = objSearch.getUltimoPrecioCompraSoles_byOCAndArticle(ordenCompraId, itemId);
+                    // Validar ultimo precio de compra
+                    if (ultimoPrecioCompraSoles) {
 
-                        // Debug
-                        // console.log('ultimoPrecioCompraSoles', ultimoPrecioCompraSoles);
-
-                        // Validar ultimo precio de compra
-                        if (ultimoPrecioCompraSoles) {
-
-                            // Setear ultimo precio de compra
-                            recordContext.setCurrentSublistValue({
-                                sublistId: 'item',
-                                fieldId: 'custcol_bio_cam_oc_ultimo_precio', // Ver campo en Netsuite ---> BIO_CAM_OC_ULTIMO_PRECIO (custcol_bio_cam_oc_ultimo_precio) ----> https://6462530.app.netsuite.com/app/common/custom/columncustfield.nl?id=8503
-                                line: line,
-                                value: (parseFloat(ultimoPrecioCompraSoles) / parseFloat(exchangerate)).toFixed(2) || null
-                            });
-                        }
+                        // Setear ultimo precio de compra
+                        recordContext.setCurrentSublistValue({
+                            sublistId: 'item',
+                            fieldId: 'custcol_bio_cam_oc_ultimo_precio', // Ver campo en Netsuite ---> BIO_CAM_OC_ULTIMO_PRECIO (custcol_bio_cam_oc_ultimo_precio) ----> https://6462530.app.netsuite.com/app/common/custom/columncustfield.nl?id=8503
+                            line: line,
+                            value: (parseFloat(ultimoPrecioCompraSoles) / parseFloat(exchangerate)).toFixed(2) || null
+                        });
                     }
                 }
             }
+        }
+
+        /****************** Helper ******************/
+
+        let isEmpty = (value) => {
+
+            if (value === ``) {
+                return true;
+            }
+
+            if (value === null) {
+                return true;
+            }
+
+            if (value === undefined) {
+                return true;
+            }
+
+            if (value === `undefined`) {
+                return true;
+            }
+
+            if (value === `null`) {
+                return true;
+            }
+
+            return false;
         }
 
         return {
