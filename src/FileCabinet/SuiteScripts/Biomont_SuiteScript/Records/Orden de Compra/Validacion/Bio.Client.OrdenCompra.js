@@ -76,6 +76,7 @@ define(['./lib/Bio.Library.Search', 'N'],
 
         function setValueSubList(scriptContext, recordContext, mode) {
 
+            /*
             // DEBUG
             // SI EL EVENTO OCURRE A NIVEL DE CAMPOS DE CABECERA
             if (isEmpty(scriptContext.sublistId)) {
@@ -86,6 +87,7 @@ define(['./lib/Bio.Library.Search', 'N'],
             if (!isEmpty(scriptContext.sublistId)) {
                 console.log('fieldChanged!!!', scriptContext)
             }
+            */
 
             /******************/
 
@@ -97,10 +99,10 @@ define(['./lib/Bio.Library.Search', 'N'],
 
                 // Obtener datos
                 let ordenCompraId = recordContext.getValue('id');
-                let exchangerate = recordContext.getValue('exchangerate'); // Si la moneda es soles, el TC por defecto es 1
+                let tipoCambio = recordContext.getValue('exchangerate'); // Si la moneda es soles, el TC por defecto es 1
 
                 // Debug
-                // console.log('data', { ordenCompraId, exchangerate });
+                // console.log('data', { ordenCompraId, tipoCambio });
 
                 // Obtener campos
                 let columnItem = recordContext.getCurrentSublistValue({
@@ -126,7 +128,7 @@ define(['./lib/Bio.Library.Search', 'N'],
                             sublistId: 'item',
                             fieldId: 'custcol_bio_cam_oc_ultimo_precio', // Ver campo en Netsuite ---> BIO_CAM_OC_ULTIMO_PRECIO (custcol_bio_cam_oc_ultimo_precio) ----> https://6462530.app.netsuite.com/app/common/custom/columncustfield.nl?id=8503
                             line: line,
-                            value: (parseFloat(ultimoPrecioCompraSoles) / parseFloat(exchangerate)).toFixed(2) || null
+                            value: (parseFloat(ultimoPrecioCompraSoles) / parseFloat(tipoCambio)).toFixed(2) || null
                         });
                     }
                 }

@@ -47,7 +47,7 @@ define(['./lib/Bio.Library.Search', './lib/Bio.Library.Helper', 'N'],
             // Obtener datos
             let formulario = newRecord.getValue('customform') || null;
             let ordenCompraId = newRecord.getValue('id') || null;
-            let exchangerate = newRecord.getValue('exchangerate') || null; // Si la moneda es soles, el TC por defecto es 1
+            let tipoCambio = newRecord.getValue('exchangerate') || null; // Si la moneda es soles, el TC por defecto es 1
 
             // Modo crear y formularios
             if (type == 'create' && formularios.includes(Number(formulario))) {
@@ -85,7 +85,7 @@ define(['./lib/Bio.Library.Search', './lib/Bio.Library.Helper', 'N'],
                                 sublistId: sublistName,
                                 fieldId: 'custcol_bio_cam_oc_ultimo_precio', // Ver campo en Netsuite ---> BIO_CAM_OC_ULTIMO_PRECIO (custcol_bio_cam_oc_ultimo_precio) ----> https://6462530.app.netsuite.com/app/common/custom/columncustfield.nl?id=8503
                                 line: i,
-                                value: (parseFloat(ultimoPrecioCompraSoles) / parseFloat(exchangerate)).toFixed(2) || null
+                                value: (parseFloat(ultimoPrecioCompraSoles) / parseFloat(tipoCambio)).toFixed(2) || null
                             });
                         }
                     }
