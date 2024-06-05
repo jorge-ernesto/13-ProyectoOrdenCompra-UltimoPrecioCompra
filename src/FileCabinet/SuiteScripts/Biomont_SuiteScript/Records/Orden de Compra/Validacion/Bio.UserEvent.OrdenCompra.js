@@ -3,6 +3,8 @@
 //      - Biomont UE Orden de Compra (customscript_bio_ue_orden_compra)
 // - Registro:
 //      - Orden de Compra (purchaseorder)
+// - Contexto de Localizacion:
+//      - Peru
 
 // Validación como la usa LatamReady:
 // - ClientScript           : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.

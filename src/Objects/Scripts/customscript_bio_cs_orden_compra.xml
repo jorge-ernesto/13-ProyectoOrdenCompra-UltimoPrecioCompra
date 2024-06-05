@@ -10,13 +10,14 @@
   <scriptdeployments>
     <scriptdeployment scriptid="customdeploy_bio_cs_orden_compra">
       <allemployees>F</allemployees>
-      <alllocalizationcontexts>T</alllocalizationcontexts>
+      <alllocalizationcontexts>F</alllocalizationcontexts>
       <allpartners>F</allpartners>
       <allroles>T</allroles>
       <audslctrole></audslctrole>
       <eventtype></eventtype>
       <executioncontext>ACTION|ADVANCEDREVREC|BANKCONNECTIVITY|BANKSTATEMENTPARSER|BUNDLEINSTALLATION|CLIENT|CONSOLRATEADJUSTOR|CSVIMPORT|CUSTOMGLLINES|CUSTOMMASSUPDATE|DATASETBUILDER|DEBUGGER|EMAILCAPTURE|FICONNECTIVITY|FIPARSER|MAPREDUCE|OCRPLUGIN|OTHER|PAYMENTGATEWAY|PAYMENTPOSTBACK|PLATFORMEXTENSION|PORTLET|PROMOTIONS|RECORDACTION|RESTLET|RESTWEBSERVICES|SCHEDULED|SDFINSTALLATION|SHIPPINGPARTNERS|SUITELET|TAXCALCULATION|USEREVENT|USERINTERFACE|WEBSERVICES|WORKBOOKBUILDER|WORKFLOW</executioncontext>
       <isdeployed>T</isdeployed>
+      <localizationcontext>PE</localizationcontext>
       <loglevel>DEBUG</loglevel>
       <recordtype>PURCHASEORDER</recordtype>
       <status>RELEASED</status>

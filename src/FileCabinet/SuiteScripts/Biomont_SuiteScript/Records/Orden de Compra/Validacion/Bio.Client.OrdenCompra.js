@@ -3,6 +3,8 @@
 //      - Biomont CS Orden de Compra (customscript_bio_cs_orden_compra)
 // - Registro:
 //      - Orden de Compra (purchaseorder)
+// - Contexto de Localizacion:
+//      - Peru
 
 // Validación como la usa LatamReady:
 // - ClientScript           : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
@@ -41,9 +43,9 @@ define(['./lib/Bio.Library.Search', 'N'],
          *
          * @since 2015.2
          */
-        function pageInit(scriptContext) {
+        function localizationContextEnter(scriptContext) {
 
-            console.log('pageInit');
+            console.log('localizationContextEnter');
         }
 
         /**
@@ -163,7 +165,7 @@ define(['./lib/Bio.Library.Search', 'N'],
         }
 
         return {
-            pageInit: pageInit,
+            localizationContextEnter: localizationContextEnter,
             fieldChanged: fieldChanged
         };
 
