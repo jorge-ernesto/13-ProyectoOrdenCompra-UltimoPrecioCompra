@@ -1,6 +1,6 @@
 // Notas del archivo:
 // - Secuencia de comando:
-//      - Biomont CS Orden de Compra (customscript_bio_cs_orden_compra)
+//      - Biomont CS Validacion Orden Compra (customscript_bio_cs_valida_orden_compra)
 // - Registro:
 //      - Orden de Compra (purchaseorder)
 // - Contexto de Localizacion:
