@@ -7,9 +7,9 @@
 //      - Peru
 
 // Validación como la usa LatamReady:
-// - ClientScript           : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
-// - En modo crear o editar : Validamos por el formulario.
-// - En modo ver            : Validamos por el pais de la subsidiaria.
+// - ClientScript                   : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
+// - En modo crear, copiar o editar : Validamos por el formulario.
+// - En modo ver                    : Validamos por el pais de la subsidiaria.
 
 /**
  * @NApiVersion 2.1
@@ -29,7 +29,7 @@ define(['./lib/Bio.Library.Search', './lib/Bio.Library.Helper', 'N'],
          * 197: BIO_FRM_ORDEN_COMPRA_IMPORTACION
          * 225: BIO_FRM_ORDEN_COMPRA_SERVICIOS
          */
-        const formularios = [183, 249, 197, 225];
+        const forms = [183, 249, 197, 225];
 
         /******************/
 
@@ -47,12 +47,12 @@ define(['./lib/Bio.Library.Search', './lib/Bio.Library.Helper', 'N'],
             let { newRecord, type } = scriptContext;
 
             // Obtener datos
-            let formulario = newRecord.getValue('customform') || null;
+            let form_id = newRecord.getValue('customform') || null;
             let ordenCompraId = newRecord.getValue('id') || null;
             let tipoCambio = newRecord.getValue('exchangerate') || null; // Si la moneda es soles, el TC por defecto es 1
 
             // Modo crear y formularios
-            if (type == 'create' && formularios.includes(Number(formulario))) {
+            if (type == 'create' && forms.includes(Number(form_id))) {
 
                 // Obtener data de la sublista
                 let sublistName = 'item';

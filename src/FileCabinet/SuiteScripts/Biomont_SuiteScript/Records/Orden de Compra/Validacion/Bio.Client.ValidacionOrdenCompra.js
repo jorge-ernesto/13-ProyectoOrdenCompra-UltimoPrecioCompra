@@ -7,9 +7,9 @@
 //      - Peru
 
 // Validación como la usa LatamReady:
-// - ClientScript           : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
-// - En modo crear o editar : Validamos por el formulario.
-// - En modo ver            : Validamos por el pais de la subsidiaria.
+// - ClientScript                   : No se ejecuta en modo ver. Solo se ejecuta en modo crear, copiar o editar.
+// - En modo crear, copiar o editar : Validamos por el formulario.
+// - En modo ver                    : Validamos por el pais de la subsidiaria.
 
 /**
  * @NApiVersion 2.1
@@ -30,7 +30,7 @@ define(['./lib/Bio.Library.Search', 'N'],
          * 197: BIO_FRM_ORDEN_COMPRA_IMPORTACION
          * 225: BIO_FRM_ORDEN_COMPRA_SERVICIOS
          */
-        const formularios = [183, 249, 197, 225];
+        const forms = [183, 249, 197, 225];
 
         /******************/
 
@@ -67,10 +67,10 @@ define(['./lib/Bio.Library.Search', 'N'],
             let mode = recordContext.getValue('id') ? 'edit' : 'create';
 
             // Obtener datos
-            let formulario = recordContext.getValue('customform') || null;
+            let form_id = recordContext.getValue('customform') || null;
 
             // Modo crear, editar, copiar y formularios
-            if ((mode == 'create' || mode == 'edit' || mode == 'copy') && formularios.includes(Number(formulario))) {
+            if ((mode == 'create' || mode == 'edit' || mode == 'copy') && forms.includes(Number(form_id))) {
 
                 setValueSubList(scriptContext, recordContext, mode);
             }
